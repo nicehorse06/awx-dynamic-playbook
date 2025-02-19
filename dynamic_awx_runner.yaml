@@ -1,5 +1,5 @@
-- hosts: "{{ target_hosts | default('all') }}"  # Specify the target hosts, defaulting to 'all' if not provided
-  gather_facts: no  # Disable fact gathering to improve execution speed since it's not required
+- hosts: "{{ target_hosts | default('all') }}"  # Default to all hosts if target_hosts is not set
+  gather_facts: no  # Disable fact gathering for performance
 
   tasks:
     - name: Parse dynamic playbooks
@@ -11,12 +11,11 @@
       debug:
         msg: "{{ dynamic_playbooks }}"
       when: dynamic_playbooks is defined
-      # Print parsed playbooks to help debugging
+      # Debugging: Show parsed playbooks in logs for validation
 
-    - name: Run full Playbooks
-      include_tasks: "{{ item }}"
-      loop: "{{ dynamic_playbooks | list }}"
-      loop_control:
-        label: "{{ item }}"
+    - name: Run parsed tasks dynamically
+      ansible.builtin.include_tasks:
+        apply:
+          tasks: "{{ dynamic_playbooks }}"
       when: dynamic_playbooks is defined and dynamic_playbooks | length > 0
-      # Execute each task dynamically from the parsed list
+      # Instead of including a separate file, apply tasks dynamically
