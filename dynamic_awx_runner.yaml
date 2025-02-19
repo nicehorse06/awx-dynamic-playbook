@@ -4,9 +4,19 @@
   tasks:
     - name: Parse dynamic playbooks
       set_fact:
-        dynamic_playbooks: "{{ value | default([]) | from_yaml }}"
+        dynamic_playbooks: "{{ value | from_yaml }}"  
         # Convert the API-passed 'value' (string in YAML format) into a structured list
 
+    - name: Validate parsed dynamic playbooks
+      debug:
+        msg: "{{ dynamic_playbooks }}"
+      when: dynamic_playbooks is defined
+      # Print parsed playbooks to help debugging
+
     - name: Run full Playbooks
-      block: "{{ dynamic_playbooks }}"
-      # Dynamically execute tasks parsed from 'value'
+      include_tasks: "{{ item }}"
+      loop: "{{ dynamic_playbooks | list }}"
+      loop_control:
+        label: "{{ item }}"
+      when: dynamic_playbooks is defined and dynamic_playbooks | length > 0
+      # Execute each task dynamically from the parsed list
