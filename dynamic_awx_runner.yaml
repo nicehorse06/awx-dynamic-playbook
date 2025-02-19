@@ -1,0 +1,13 @@
+- hosts: "{{ target_hosts | default('all') }}"  # Specify the target hosts, defaulting to 'all' if not provided
+  gather_facts: no  # Disable fact gathering to improve execution speed since it's not required
+
+  tasks:
+    - name: Parse dynamic playbooks
+      set_fact:
+        dynamic_playbooks: "{{ value | from_yaml }}"  
+        # Convert the API-passed 'value' (string in YAML format) into a structured list
+
+    - name: Run full Playbooks
+      include_tasks: "{{ item }}"  
+      loop: "{{ dynamic_playbooks }}"  
+      # Loop through the parsed dynamic playbooks and include each task dynamically

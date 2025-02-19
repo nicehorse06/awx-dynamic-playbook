@@ -1,0 +1,26 @@
+# Ignore Python virtual environments (if using Ansible with Python)
+venv/
+.env
+
+# Ignore compiled Ansible artifacts
+*.retry
+*.pyc
+*.pyo
+*.swp
+*.swo
+*.log
+
+# Ignore Ansible Vault-encrypted files (if using vault)
+*.vault
+
+# Ignore AWX temporary files
+awx-logs/
+awx-temp/
+awx-output/
+
+# Ignore system-generated files
+.DS_Store
+Thumbs.db
+
+# Ignore Git-related files
+.git/
