@@ -4,7 +4,7 @@
   tasks:
     - name: Parse dynamic playbooks
       set_fact:
-        dynamic_playbooks: "{{ value | from_yaml }}"  
+        dynamic_playbooks: "{{ value | default([]) | from_yaml }}"
         # Convert the API-passed 'value' (string in YAML format) into a structured list
 
     - name: Run full Playbooks
