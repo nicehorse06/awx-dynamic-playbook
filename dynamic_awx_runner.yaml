@@ -8,6 +8,5 @@
         # Convert the API-passed 'value' (string in YAML format) into a structured list
 
     - name: Run full Playbooks
-      include_tasks: "{{ item }}"  
-      loop: "{{ dynamic_playbooks }}"  
+       tasks: "{{ dynamic_playbooks }}"
       # Loop through the parsed dynamic playbooks and include each task dynamically
