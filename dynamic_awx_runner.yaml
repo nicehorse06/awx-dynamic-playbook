@@ -1,21 +1,12 @@
-- hosts: "{{ target_hosts | default('all') }}"  # Default to all hosts if target_hosts is not set
-  gather_facts: no  # Disable fact gathering for performance
+---
+- name: Hello World Sample
+  hosts: all
+  gather_facts: false
 
   tasks:
-    - name: Parse dynamic playbooks
-      set_fact:
-        dynamic_playbooks: "{{ value | from_yaml }}"  
-        # Convert the API-passed 'value' (string in YAML format) into a structured list
-
-    - name: Validate parsed dynamic playbooks
+    - name: "Dynamic Tasks"
       debug:
-        msg: "{{ dynamic_playbooks }}"
-      when: dynamic_playbooks is defined
-      # Debugging: Show parsed playbooks in logs for validation
-
-    - name: Run parsed tasks dynamically
-      ansible.builtin.include_tasks:
-        apply:
-          tasks: "{{ dynamic_playbooks }}"
-      when: dynamic_playbooks is defined and dynamic_playbooks | length > 0
-      # Instead of including a separate file, apply tasks dynamically
+        msg: "{{ item.debug.msg }}"
+      loop: "{{ value }}"
+      loop_control:
+        label: "{{ item.name }}"
