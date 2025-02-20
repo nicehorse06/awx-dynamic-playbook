@@ -4,26 +4,8 @@
   gather_facts: false
 
   tasks:
-    - name: "Execute Command"
-      become: yes
-      command: "{{ item.command }}"
-      when: item.command is defined
-      loop: "{{ value }}"
-      loop_control:
-        label: "{{ item.name }}"
-
-    - name: "Execute Shell"
-      become: yes
-      shell: "{{ item.shell }}"
-      when: item.shell is defined
-      loop: "{{ value }}"
-      loop_control:
-        label: "{{ item.name }}"
-
-    - name: "Show Debug Message"
-      debug:
-        msg: "{{ item.debug.msg }}"
-      when: item.debug is defined
+    - name: "Process each item sequentially"
+      include_tasks: dynamic_item_task.yml
       loop: "{{ value }}"
       loop_control:
         label: "{{ item.name }}"
