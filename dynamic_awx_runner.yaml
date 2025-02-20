@@ -5,14 +5,20 @@
 
   tasks:
     - name: "Run Commands or Debug"
-      block:
-        - name: "Execute Command"
-          command: "{{ item.command }}"
-          when: item.command is defined
-        - name: "Show Debug Message"
-          debug:
-            msg: "{{ item.debug.msg }}"
-          when: item.debug is defined
-      loop: "{{ value }}"
-      loop_control:
-        label: "{{ item.name }}"
+      include_tasks: 
+        file: inline_task.yaml
+        apply:
+          loop: "{{ value }}"
+          loop_control:
+            loop_var: task_data
+
+- name: inline_task.yaml
+  tasks:
+    - name: "Execute Command"
+      command: "{{ task_data.command }}"
+      when: task_data.command is defined
+
+    - name: "Show Debug Message"
+      debug:
+        msg: "{{ task_data.debug.msg }}"
+      when: task_data.debug is defined
