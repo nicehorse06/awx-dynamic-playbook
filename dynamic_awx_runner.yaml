@@ -6,8 +6,16 @@
   tasks:
     - name: "Execute Command"
       become: yes
-      shell: "{{ item.command }}"
+      command: "{{ item.command }}"
       when: item.command is defined
+      loop: "{{ value }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: "Execute Shell"
+      become: yes
+      shell: "{{ item.shell }}"
+      when: item.shell is defined
       loop: "{{ value }}"
       loop_control:
         label: "{{ item.name }}"
