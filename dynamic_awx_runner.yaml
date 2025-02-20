@@ -4,9 +4,15 @@
   gather_facts: false
 
   tasks:
-    - name: "Dynamic Tasks"
-      debug:
-        msg: "{{ item.debug.msg }}"
+    - name: "Run Commands or Debug"
+      block:
+        - name: "Execute Command"
+          command: "{{ item.command }}"
+          when: item.command is defined
+        - name: "Show Debug Message"
+          debug:
+            msg: "{{ item.debug.msg }}"
+          when: item.debug is defined
       loop: "{{ value }}"
       loop_control:
         label: "{{ item.name }}"
