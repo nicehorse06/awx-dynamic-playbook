@@ -6,6 +6,6 @@
   tasks:
     - name: "Process each item sequentially"
       include_tasks: dynamic_item_task.yml
-      loop: "{{ value }}"
+      loop: "{{ tasksList }}"
       loop_control:
         label: "{{ item.name }}"
