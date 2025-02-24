@@ -1,14 +1,14 @@
-- name: Execute Command if defined
+- name: "Command: {{ item.name }}"
   become: yes
   command: "{{ item.command }}"
   when: item.command is defined
 
-- name: Execute Shell if defined
+- name: "Shell: {{ item.name }}"
   become: yes
   shell: "{{ item.shell }}"
   when: item.shell is defined
 
-- name: Show Debug Message if defined
+- name: "Debug: {{ item.name }}"
   debug:
     msg: "{{ item.debug.msg }}"
   when: item.debug is defined
