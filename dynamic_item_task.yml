@@ -16,26 +16,22 @@
     msg: "{{ item.debug.msg }}"
   when: item.debug is defined
 
-- name: "Raw: {{ item.name }}"
-  become: yes
-  raw: "{{ item.raw }}"
-  when: item.raw is defined
-
 - name: "File: {{ item.name }}"
   become: yes
   file:
     path: "{{ item.file.path }}"
-    state: "{{ item.file.state|default('file') }}"
-    mode: "{{ item.file.mode|default('0644') }}"
+    state: "{{ item.file.state | default('file') }}"
+    mode: "{{ item.file.mode | default('0644') }}"
   when: item.file is defined
 
 - name: "Copy: {{ item.name }}"
   become: yes
   copy:
-    src: "{{ item.copy.src }}"
-    dest: "{{ item.copy.dest }}"
-    mode: "{{ item.copy.mode|default('0644') }}"
-  when: item.copy is defined
+    src: "{{ item.copy_params.src }}"
+    dest: "{{ item.copy_params.dest }}"
+    mode: "{{ item.copy_params.mode | default('0644') }}"
+  when: item.copy_params is defined
+
 
 - name: "Template: {{ item.name }}"
   become: yes
@@ -44,35 +40,11 @@
     dest: "{{ item.template.dest }}"
   when: item.template is defined
 
-- name: "Fetch: {{ item.name }}"
-  become: yes
-  fetch:
-    src: "{{ item.fetch.src }}"
-    dest: "{{ item.fetch.dest }}"
-    flat: "{{ item.fetch.flat|default('yes') }}"
-  when: item.fetch is defined
-
-- name: "Lineinfile: {{ item.name }}"
-  become: yes
-  lineinfile:
-    path: "{{ item.lineinfile.path }}"
-    line: "{{ item.lineinfile.line }}"
-    state: "{{ item.lineinfile.state|default('present') }}"
-  when: item.lineinfile is defined
-
-- name: "Blockinfile: {{ item.name }}"
-  become: yes
-  blockinfile:
-    path: "{{ item.blockinfile.path }}"
-    block: "{{ item.blockinfile.block }}"
-    state: "{{ item.blockinfile.state|default('present') }}"
-  when: item.blockinfile is defined
-
 - name: "APT: {{ item.name }}"
   become: yes
   apt:
     name: "{{ item.apt.name }}"
-    state: "{{ item.apt.state|default('present') }}"
+    state: "{{ item.apt.state | default('present') }}"
     update_cache: yes
   when: item.apt is defined
 
@@ -80,103 +52,36 @@
   become: yes
   yum:
     name: "{{ item.yum.name }}"
-    state: "{{ item.yum.state|default('present') }}"
+    state: "{{ item.yum.state | default('present') }}"
   when: item.yum is defined
-
-- name: "Package: {{ item.name }}"
-  become: yes
-  package:
-    name: "{{ item.package.name }}"
-    state: "{{ item.package.state|default('present') }}"
-  when: item.package is defined
 
 - name: "Service: {{ item.name }}"
   become: yes
   service:
     name: "{{ item.service.name }}"
-    state: "{{ item.service.state|default('started') }}"
-    enabled: "{{ item.service.enabled|default(true) }}"
+    state: "{{ item.service.state | default('started') }}"
+    enabled: "{{ item.service.enabled | default(true) }}"
   when: item.service is defined
-
-- name: "Systemd: {{ item.name }}"
-  become: yes
-  systemd:
-    name: "{{ item.systemd.name }}"
-    state: "{{ item.systemd.state|default('started') }}"
-    enabled: "{{ item.systemd.enabled|default(true) }}"
-  when: item.systemd is defined
-
-- name: "Cron: {{ item.name }}"
-  become: yes
-  cron:
-    name: "{{ item.cron.name }}"
-    minute: "{{ item.cron.minute|default('0') }}"
-    hour: "{{ item.cron.hour|default('*') }}"
-    job: "{{ item.cron.job }}"
-    state: "{{ item.cron.state|default('present') }}"
-  when: item.cron is defined
 
 - name: "User: {{ item.name }}"
   become: yes
   user:
     name: "{{ item.user.name }}"
-    state: "{{ item.user.state|default('present') }}"
+    state: "{{ item.user.state | default('present') }}"
   when: item.user is defined
 
-- name: "Group: {{ item.name }}"
+- name: "Lineinfile: {{ item.name }}"
   become: yes
-  group:
-    name: "{{ item.group.name }}"
-    state: "{{ item.group.state|default('present') }}"
-  when: item.group is defined
-
-- name: "Set Fact: {{ item.name }}"
-  set_fact:
-    "{{ item.set_fact.key }}": "{{ item.set_fact.value }}"
-  when: item.set_fact is defined
-
-- name: "Assert: {{ item.name }}"
-  assert:
-    that:
-      - "{{ item.assert.condition }}"
-    success_msg: "{{ item.assert.success_msg|default('Assertion passed.') }}"
-    fail_msg: "{{ item.assert.fail_msg|default('Assertion failed!') }}"
-  when: item.assert is defined
-
-- name: "URI: {{ item.name }}"
-  become: yes
-  uri:
-    url: "{{ item.uri.url }}"
-    method: "{{ item.uri.method|default('GET') }}"
-    return_content: yes
-  when: item.uri is defined
-
-- name: "Get URL: {{ item.name }}"
-  become: yes
-  get_url:
-    url: "{{ item.get_url.url }}"
-    dest: "{{ item.get_url.dest }}"
-    mode: "{{ item.get_url.mode|default('0644') }}"
-  when: item.get_url is defined
-
-- name: "Wait for: {{ item.name }}"
-  become: yes
-  wait_for:
-    port: "{{ item.wait_for.port|default('80') }}"
-    state: "{{ item.wait_for.state|default('started') }}"
-    delay: "{{ item.wait_for.delay|default('0') }}"
-  when: item.wait_for is defined
-
-- name: "Pause: {{ item.name }}"
-  pause:
-    prompt: "{{ item.pause.prompt|default('Press Enter to continue...') }}"
-    minutes: "{{ item.pause.minutes|default('0') }}"
-  when: item.pause is defined
+  lineinfile:
+    path: "{{ item.lineinfile.path }}"
+    line: "{{ item.lineinfile.line }}"
+    state: "{{ item.lineinfile.state | default('present') }}"
+  when: item.lineinfile is defined
 
 - name: "Git: {{ item.name }}"
   become: yes
   git:
     repo: "{{ item.git.repo }}"
     dest: "{{ item.git.dest }}"
-    version: "{{ item.git.version|default('HEAD') }}"
+    version: "{{ item.git.version | default('HEAD') }}"
   when: item.git is defined
