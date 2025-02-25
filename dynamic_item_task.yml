@@ -48,13 +48,6 @@
     update_cache: yes
   when: item.apt is defined
 
-- name: "Yum: {{ item.name }}"
-  become: yes
-  yum:
-    name: "{{ item.yum.name }}"
-    state: "{{ item.yum.state | default('present') }}"
-  when: item.yum is defined
-
 - name: "Service: {{ item.name }}"
   become: yes
   service:
